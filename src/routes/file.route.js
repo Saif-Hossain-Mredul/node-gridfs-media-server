@@ -7,7 +7,7 @@ const fileRoute = express.Router();
 
 const uploader = multer({ storage });
 
-fileRoute.post('/upload', uploader.single('file'), async (req, res) => {
+fileRoute.post('/files/upload', uploader.single('file'), async (req, res) => {
     try {
         res.status(201).send(
             {
@@ -25,5 +25,6 @@ fileRoute.post('/upload', uploader.single('file'), async (req, res) => {
         });
     }
 });
+
 
 module.exports = fileRoute;
