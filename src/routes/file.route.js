@@ -26,5 +26,16 @@ fileRoute.post('/files/upload', uploader.single('file'), async (req, res) => {
     }
 });
 
+fileRoute.get('/files/:fileName', async (req, res) => {
+    try {
+
+    } catch (e) {
+        console.log(e);
+        res.send({
+            error: true,
+            message: 'Error while uploading.',
+        });
+    }
+})
 
 module.exports = fileRoute;
