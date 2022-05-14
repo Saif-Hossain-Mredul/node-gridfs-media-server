@@ -52,8 +52,11 @@ fileRoute.get('/files/:fileName', async (req, res) => {
             throw new Error('No file exists');
         }
 
-        if (file.contentType.includes('audio' || 'video')) {
-            // File exists
+        if (
+            file.contentType.includes('audio') ||
+            file.contentType.includes('video')
+        ) {
+            // For Streaming
             const range = req.headers.range || '';
             const fileSize = file.length;
             const CHUNK_SIZE = 256000; // 256Kb
@@ -62,16 +65,22 @@ fileRoute.get('/files/:fileName', async (req, res) => {
             const contentLength = end - start + 1;
 
             const headers = {
-                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-                'Accept-Ranges': 'bytes',
-                'Content-Length': contentLength,
-                'Content-Type': file.contentType,
+                'content-range': `bytes ${start}-${end}/${fileSize}`,
+                'accept-ranges': 'bytes',
+                'content-length': contentLength,
+                'content-type': file.contentType,
             };
 
             res.writeHead(206, headers);
 
-            gfsBucket.openDownloadStreamByName(file.filename).pipe(res);
+            gfsBucket
+                .openDownloadStreamByName(file.filename, {
+                    start,
+                    end,
+                })
+                .pipe(res);
         } else {
+            // Direct download
             gfsBucket.openDownloadStreamByName(file.filename).pipe(res);
         }
     } catch (e) {
