@@ -11,6 +11,6 @@ const uploader = multer({ storage });
 
 fileRoute.post('/files/upload', uploader.single('file'), uploadFileController);
 
-fileRoute.get('/files/:fileName', getFileController);
+fileRoute.get('/files/:bucketName/:fileName', getFileController);
 
 module.exports = fileRoute;

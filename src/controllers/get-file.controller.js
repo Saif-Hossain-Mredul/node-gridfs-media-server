@@ -4,10 +4,11 @@ const storage = require('../db/gridfs-configurations.db')
 module.exports = getFile = async (req, res) => {
     try {
         const fileName = req.params.fileName;
+        const bucketName = req.params.bucketName;
         const { db, client } = await storage.ready();
 
         const gfsBucket = new mongoose.mongo.GridFSBucket(db, {
-            bucketName: 'files',
+            bucketName: bucketName,
         });
 
         const cursor = await gfsBucket
